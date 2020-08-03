@@ -1,5 +1,5 @@
 import React, { useEffect , useContext } from 'react';
-import { Table , TableBody , TableCell , TableContainer , TableHead ,TableRow , Paper , Grid } from '@material-ui/core';
+import { Table , TableBody , TableCell , TableContainer , TableHead ,TableRow , Paper , Grid, Button } from '@material-ui/core';
 import {createUseStyles} from 'react-jss';
 import EditIcon from '@material-ui/icons/Edit';
 import {DeviceContext,selectedDeviceIndexContext,editDisplayContext,selectedDeviceContext} from './DeviceContext';
@@ -57,7 +57,7 @@ export default function DeviceList(props) {
                                     </TableCell>
                                     <TableCell align="center">{row.model}</TableCell>
                                     <TableCell align="center">{row.note}</TableCell>
-                                    <TableCell align="center" onClick={()=>handleEdit(i)}><EditIcon color="primary"/>EDIT</TableCell>
+                                    <TableCell align="center"><Button onClick={()=>handleEdit(i)}><EditIcon color="primary"/>EDIT</Button></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
