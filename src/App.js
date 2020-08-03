@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React , {useEffect , useState} from 'react';
+import DeviceList from './DeviceList';
+import EditForm from './EditForm'
+
+function createData(name,serial,model, note) {
+  return { name,serial, model, note };
+}
 
 function App() {
+  const [devices,setDevices] = useState( [
+      createData('Wifi Level Sensor', '70B3D5CD00100000', 'PLD2-W', 'Testing level sensor'),
+      createData('Wifi Level Sensor', 'FFFFFFFFFFFFFFFF', 'PLD2-W', 'Testing level sensor')
+  ] );
+  const [editDisplay,setEditDisplay] = useState(false);
+  const [selectedDevice,setSelectedDevice]= useState({name:'',serial:'',model:'',note:''});
+  useEffect(()=>{
+  })
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <DeviceList devices={devices} setFormOpen={(isOpen,index)=>{setEditDisplay(isOpen);debugger;setSelectedDevice(devices[index]);}}/>
+      <EditForm open={editDisplay} device={selectedDevice} setOpen={(isOpen)=>setEditDisplay(isOpen)} updateDevice={(newDevice)=>setDevices(state => [...state, newDevice])} />
+    </React.Fragment>
   );
 }
 
