@@ -2,14 +2,11 @@ import React , {useEffect , useState} from 'react';
 import DeviceList from './DeviceList';
 import EditForm from './EditForm'
 
-function createData(name,serial,model, note) {
-  return { name,serial, model, note };
-}
 
 function App() {
   const [devices,setDevices] = useState( [
-      createData('Wifi Level Sensor', '70B3D5CD00100000', 'PLD2-W', 'Testing level sensor.'),
-      createData('Wifi Level Sensor', 'FFFFFFFFFFFFFFFF', 'PLD2-W', 'Testing level sensor.')
+    { name:'Wifi Level Sensor', serial:'70B3D5CD00100000', model:'PLD2-W', note:'Testing level sensor.'},
+    { name:'Wifi Level Sensor', serial:'FFFFFFFFFFFFFFFF', model:'PLD2-W', note:'Testing level sensor.'}
   ] );
   const [editDisplay,setEditDisplay] = useState(false);
   const [selectedDevice,setSelectedDevice]= useState({});
@@ -19,7 +16,7 @@ function App() {
  const updateDevice=(values)=>{
   const list = devices.map((item, j) => {
     if (j === selectedDeviceIndex) {
-      return createData(values.name, item.serial, item.model, values.note);
+      return {name:values.name, serial:item.serial, model:item.model, note:values.note};
     } else {
       return item;
     }
