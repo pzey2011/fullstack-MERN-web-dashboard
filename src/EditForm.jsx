@@ -7,14 +7,17 @@ DialogContent,
 DialogTitle,
 Grid} from '@material-ui/core';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import {DeviceContext,selectedDeviceIndexContext} from './DeviceContext';
+import {DeviceContext,editDisplayContext,selectedDeviceContext,selectedDeviceIndexContext} from './DeviceContext';
 
-export default function EditForm(props) {
+
+export default function EditForm() {
   const [devices,setDevices] = useContext(DeviceContext); 
   const [selectedDeviceIndex,setSelectedDeviceIndex] = useContext(selectedDeviceIndexContext); 
-  
+  const [editDisplay,setEditDisplay] = useContext(editDisplayContext); 
+   const [selectedDevice,setSelectedDevice] =useContext(selectedDeviceContext); 
+
   const handleClose = () => {
-    props.setOpen(false);
+    setEditDisplay(false);
   };
   useEffect(() => {
     debugger;
@@ -33,7 +36,7 @@ export default function EditForm(props) {
   return (
         <Formik
             enableReinitialize
-            initialValues={{ name: props.device.name , note: props.device.note }}
+            initialValues={{ name: selectedDevice.name , note: selectedDevice.note }}
             validate={values => {
                 const errors = {};
                 if (!values.name) {
@@ -50,7 +53,7 @@ export default function EditForm(props) {
             onSubmit={(values) => {
                 
                 updateDevice(values);
-                props.setOpen(false);
+                setEditDisplay(false);
             }}
         >
            {({
@@ -64,8 +67,8 @@ export default function EditForm(props) {
          /* and other goodies */
        }) => ( 
            
-                    <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Device {props.device.name} :</DialogTitle>
+                    <Dialog open={editDisplay} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Device {selectedDevice.name} :</DialogTitle>
                         <Form>
                             <DialogContent>
                                 <Grid container spacing={2}>
@@ -74,7 +77,7 @@ export default function EditForm(props) {
                                             disabled 
                                             label='Serial' 
                                             name="serial" 
-                                            defaultValue={props.device.serial} 
+                                            defaultValue={selectedDevice.serial} 
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
