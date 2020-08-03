@@ -12,8 +12,8 @@ function App() {
       createData('Wifi Level Sensor', 'FFFFFFFFFFFFFFFF', 'PLD2-W', 'Testing level sensor.')
   ] );
   const [editDisplay,setEditDisplay] = useState(false);
-  const [selectedDevice,setSelectedDevice]= useState({name:'',serial:'',model:'',note:''});
-  const [selectedDeviceIndex,setSelectedDeviceIndex]= useState({name:'',serial:'',model:'',note:''});
+  const [selectedDevice,setSelectedDevice]= useState({});
+  const [selectedDeviceIndex,setSelectedDeviceIndex]= useState(-1);
   useEffect(()=>{
   })
  const updateDevice=(values)=>{
