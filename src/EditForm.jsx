@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React , { useContext,useEffect} from 'react';
 import {Button,
 TextField,
 Dialog,
@@ -7,14 +7,29 @@ DialogContent,
 DialogTitle,
 Grid} from '@material-ui/core';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import {DeviceContext,selectedDeviceIndexContext} from './DeviceContext';
 
-export default function FormDialog(props) {
-
+export default function EditForm(props) {
+  const [devices,setDevices] = useContext(DeviceContext); 
+  const [selectedDeviceIndex,setSelectedDeviceIndex] = useContext(selectedDeviceIndexContext); 
+  
   const handleClose = () => {
     props.setOpen(false);
   };
-  
-
+  useEffect(() => {
+    debugger;
+    
+})
+  const updateDevice=(values)=>{
+    const list = devices.map((item, j) => {
+      if (j === selectedDeviceIndex) {
+        return {name:values.name, serial:item.serial, model:item.model, note:values.note};
+      } else {
+        return item;
+      }
+    });
+    setDevices(list);
+   }
   return (
         <Formik
             enableReinitialize
@@ -34,7 +49,7 @@ export default function FormDialog(props) {
               }}
             onSubmit={(values) => {
                 
-                props.updateDevice(values);
+                updateDevice(values);
                 props.setOpen(false);
             }}
         >

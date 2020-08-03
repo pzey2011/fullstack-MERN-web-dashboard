@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext } from 'react';
 import { Table , TableBody , TableCell , TableContainer , TableHead ,TableRow , Paper , Grid } from '@material-ui/core';
 import {createUseStyles} from 'react-jss';
 import EditIcon from '@material-ui/icons/Edit';
+import {DeviceContext,selectedDeviceIndexContext} from './DeviceContext';
 
 
 export default function DeviceList(props) {
-    
+    const [devices,setDevices] = useContext(DeviceContext); 
+    const [selectedDeviceIndex,setSelectedDeviceIndex] = useContext(selectedDeviceIndexContext); 
     const useStyles = createUseStyles((theme) => ({
         myTable: {
             width: '100%',
@@ -17,11 +19,14 @@ export default function DeviceList(props) {
         }
         
     }));
-
+    useEffect(() => {
+        debugger;
+        
+    })
     const classes = useStyles();
 
     function handleEdit(i){
-        console.log(i)
+        setSelectedDeviceIndex(i);
         props.setFormOpen(true,i);
     }  
   return (
@@ -39,7 +44,7 @@ export default function DeviceList(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {props.devices.map((row,i) => (
+                            {devices.map((row,i) => (
                                 <TableRow key={i}>
                                     <TableCell align="center" columnSpan={2}>
                                         {row.name}
