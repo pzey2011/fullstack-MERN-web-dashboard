@@ -6,13 +6,6 @@ import EditIcon from '@material-ui/icons/Edit';
 
 export default function DeviceList(props) {
     
-
-    const [count, setCount] = useState(0);
-    // Similar to componentDidMount and componentDidUpdate:
-    useEffect(() => {
-    // Update the document title using the browser API
-        document.title = `You clicked ${count} times`;
-    });
     const useStyles = createUseStyles((theme) => ({
         myTable: {
             width: '100%',
@@ -33,12 +26,8 @@ export default function DeviceList(props) {
     }  
   return (
     <div>
-        <p>You clicked {count} times</p>
-        <button onClick={() => setCount(count + 1)}>
-        Click me
-        </button>
         <Grid container spacing={2} justify="center" className={classes.tableContainer} >
-            <Grid item xs={11}>
+            <Grid item xs={12}>
                 <TableContainer component={Paper}>
                     <Table className={classes.myTable}>
                         <TableHead>
@@ -52,8 +41,11 @@ export default function DeviceList(props) {
                         <TableBody>
                             {props.devices.map((row,i) => (
                                 <TableRow key={i}>
-                                    <TableCell align="center" component="th" scope="row">
-                                        {row.name+''+row.serial}
+                                    <TableCell align="center" columnSpan={2}>
+                                        {row.name}
+                                        <br />
+                                        <br />
+                                        {row.serial}
                                     </TableCell>
                                     <TableCell align="center">{row.model}</TableCell>
                                     <TableCell align="center">{row.note}</TableCell>
