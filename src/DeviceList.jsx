@@ -23,11 +23,11 @@ export default function DeviceList(props) {
     }));
     const classes = useStyles();
 
-    function handleEdit(id){
-        actions.setSelectedDeviceIndex(id,globalDispatch);
+    function handleEdit(i){
+        actions.setSelectedDeviceIndex(i,globalDispatch);
         actions.setEditDisplay(true,globalDispatch);
-        actions.setSelectedDevice(globalState.devices[id],globalDispatch);
-        history.push('/devices/'+id+'/edit');
+        actions.setSelectedDevice(globalState.devices[i],globalDispatch);
+        history.push('/edit');
     }  
   return (
     <div>

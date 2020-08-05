@@ -8,7 +8,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/devices" component = {DeviceList} />
-          <Route exact path="/devices/:id/edit" component = {EditForm} />
+          <Route exact path="/edit" component = {EditForm} />
           <Redirect from='/' to='/devices' />
         </Switch>
       </BrowserRouter>
