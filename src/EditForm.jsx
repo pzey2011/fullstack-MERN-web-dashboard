@@ -1,4 +1,4 @@
-import React , { useContext,useEffect} from 'react';
+import React , { useContext,useEffect,useState} from 'react';
 import {Button,
 TextField,
 Dialog,
@@ -11,17 +11,24 @@ import GlobalContext from './store/GlobalContext';
 import * as actions from './store/GlobalActions';
 import { useHistory } from "react-router-dom";
 
-export default function EditForm() {
+export default function EditForm(props) {
   const history = useHistory();
   const {globalState,globalDispatch} = useContext(GlobalContext);
+  const [device,setDevice]= useState({})
 
   const handleClose = () => {
     actions.setEditDisplay(false,globalDispatch);
+    history.push('/devices');
   };
+  useEffect(() => {
+    if(globalState.devices[props.match.params.id])
+      setDevice(globalState.devices[props.match.params.id]);
+    
+  })
   return (
         <Formik
             enableReinitialize
-            initialValues={{ name: globalState.selectedDevice.name , note: globalState.selectedDevice.note }}
+            initialValues={{ name: device.name , note: device.note }}
             validate={values => {
                 const errors = {};
                 if (!values.name) {
@@ -54,7 +61,7 @@ export default function EditForm() {
        }) => ( 
            
                     <Dialog open={globalState.editDisplay} onClose={handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Device {globalState.selectedDevice.name} :</DialogTitle>
+                        <DialogTitle id="form-dialog-title">Device {device.name} :</DialogTitle>
                         <Form>
                             <DialogContent>
                                 <Grid container spacing={2}>
@@ -63,7 +70,7 @@ export default function EditForm() {
                                             disabled 
                                             label='Serial' 
                                             name="serial" 
-                                            defaultValue={globalState.selectedDevice.serial} 
+                                            defaultValue={device.serial} 
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
