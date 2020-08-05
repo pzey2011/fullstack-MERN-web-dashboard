@@ -7,36 +7,21 @@ DialogContent,
 DialogTitle,
 Grid} from '@material-ui/core';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import {DeviceContext,editDisplayContext,selectedDeviceContext,selectedDeviceIndexContext} from './DeviceContext';
-
+import GlobalContext from './store/GlobalContext';
+import * as actions from './store/GlobalActions';
+import { useHistory } from "react-router-dom";
 
 export default function EditForm() {
-  const [devices,setDevices] = useContext(DeviceContext); 
-  const [selectedDeviceIndex,setSelectedDeviceIndex] = useContext(selectedDeviceIndexContext); 
-  const [editDisplay,setEditDisplay] = useContext(editDisplayContext); 
-   const [selectedDevice,setSelectedDevice] =useContext(selectedDeviceContext); 
+  const history = useHistory();
+  const {globalState,globalDispatch} = useContext(GlobalContext);
 
   const handleClose = () => {
-    setEditDisplay(false);
+    actions.setEditDisplay(false,globalDispatch);
   };
-  useEffect(() => {
-    debugger;
-    
-})
-  const updateDevice=(values)=>{
-    const list = devices.map((item, j) => {
-      if (j === selectedDeviceIndex) {
-        return {name:values.name, serial:item.serial, model:item.model, note:values.note};
-      } else {
-        return item;
-      }
-    });
-    setDevices(list);
-   }
   return (
         <Formik
             enableReinitialize
-            initialValues={{ name: selectedDevice.name , note: selectedDevice.note }}
+            initialValues={{ name: globalState.selectedDevice.name , note: globalState.selectedDevice.note }}
             validate={values => {
                 const errors = {};
                 if (!values.name) {
@@ -52,8 +37,9 @@ export default function EditForm() {
               }}
             onSubmit={(values) => {
                 
-                updateDevice(values);
-                setEditDisplay(false);
+                actions.updateDevice(values,globalDispatch);
+                actions.setEditDisplay(false,globalDispatch);
+                history.push('/devices');
             }}
         >
            {({
@@ -67,8 +53,8 @@ export default function EditForm() {
          /* and other goodies */
        }) => ( 
            
-                    <Dialog open={editDisplay} onClose={handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Device {selectedDevice.name} :</DialogTitle>
+                    <Dialog open={globalState.editDisplay} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Device {globalState.selectedDevice.name} :</DialogTitle>
                         <Form>
                             <DialogContent>
                                 <Grid container spacing={2}>
@@ -77,7 +63,7 @@ export default function EditForm() {
                                             disabled 
                                             label='Serial' 
                                             name="serial" 
-                                            defaultValue={selectedDevice.serial} 
+                                            defaultValue={globalState.selectedDevice.serial} 
                                         />
                                     </Grid>
                                     <Grid item xs={12}>

@@ -2,14 +2,14 @@ import React, { useEffect , useContext } from 'react';
 import { Table , TableBody , TableCell , TableContainer , TableHead ,TableRow , Paper , Grid, Button } from '@material-ui/core';
 import {createUseStyles} from 'react-jss';
 import EditIcon from '@material-ui/icons/Edit';
-import {DeviceContext,selectedDeviceIndexContext,editDisplayContext,selectedDeviceContext} from './DeviceContext';
-
+import { useHistory } from "react-router-dom";
+import GlobalContext from './store/GlobalContext'
+import * as actions from './store/GlobalActions';
 
 export default function DeviceList(props) {
-    const [devices,setDevices] = useContext(DeviceContext); 
-    const [selectedDeviceIndex,setSelectedDeviceIndex] = useContext(selectedDeviceIndexContext); 
-    const [editDisplay,setEditDisplay] = useContext(editDisplayContext); 
-   const [selectedDevice,setSelectedDevice] =useContext(selectedDeviceContext); 
+    const {globalState,globalDispatch} = useContext(GlobalContext);
+    const history = useHistory();
+
     const useStyles = createUseStyles((theme) => ({
         myTable: {
             width: '100%',
@@ -21,16 +21,13 @@ export default function DeviceList(props) {
         }
         
     }));
-    useEffect(() => {
-        debugger;
-        
-    })
     const classes = useStyles();
 
     function handleEdit(i){
-        setSelectedDeviceIndex(i);
-        setEditDisplay(true);
-        setSelectedDevice(devices[i]);
+        actions.setSelectedDeviceIndex(i,globalDispatch);
+        actions.setEditDisplay(true,globalDispatch);
+        actions.setSelectedDevice(globalState.devices[i],globalDispatch);
+        history.push('/edit');
     }  
   return (
     <div>
@@ -47,7 +44,7 @@ export default function DeviceList(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {devices.map((row,i) => (
+                            {globalState.devices.map((row,i) => (
                                 <TableRow key={i}>
                                     <TableCell align="center" columnSpan={2}>
                                         {row.name}

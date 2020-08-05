@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import {DeviceProvider} from './DeviceContext'
+import GlobalStateProvider from './store/GlobalStateProvider'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <DeviceProvider>
+    <GlobalStateProvider>
       <App />
-    </DeviceProvider>
+    </GlobalStateProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
