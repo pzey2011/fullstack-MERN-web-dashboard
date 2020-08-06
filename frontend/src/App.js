@@ -1,4 +1,4 @@
-import React, { useEffect,useContext } from 'react';
+import React, { useEffect,useContext,useState } from 'react';
 import axios from 'axios';
 import DeviceList from './DeviceList';
 import EditForm from './EditForm';
@@ -8,25 +8,27 @@ import GlobalContext from './store/GlobalContext';
 
 function App() {
   const {globalState,globalDispatch} = useContext(GlobalContext);
+  const [devicesFetched,setDevicesFetched] = useState(false);
   useEffect(()=>{
     const fetchDevices = async () => {
       try {
         const responseData = await axios.get(
-          'http://localhost:5000/api/devices'
+          globalState.link+'api/devices'
         );
         const devices = responseData.data.member.map((item)=>{
           return {name:item.name,model:item.deviceModel,serial:item.serial,note:item.note}
           })
         actions.setDevices(devices,globalDispatch);
+        setDevicesFetched(true);
       } catch (err) {}
     };
     fetchDevices()
-  })
+  },[devicesFetched==false])
   return (
       <BrowserRouter>
         <Switch>
           <Route exact path="/devices" component = {DeviceList} />
-          <Route exact path="/edit" component = {EditForm} />
+          <Route exact path="/devices/:id/edit" component = {EditForm} />
           <Redirect from='/' to='/devices' />
         </Switch>
       </BrowserRouter>

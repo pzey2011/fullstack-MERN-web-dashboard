@@ -5,6 +5,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { useHistory } from "react-router-dom";
 import GlobalContext from './store/GlobalContext'
 import * as actions from './store/GlobalActions';
+import axios from 'axios';
 
 export default function DeviceList(props) {
     const {globalState,globalDispatch} = useContext(GlobalContext);
@@ -24,10 +25,10 @@ export default function DeviceList(props) {
     const classes = useStyles();
 
     function handleEdit(i){
-        actions.setSelectedDeviceIndex(i,globalDispatch);
+        
         actions.setEditDisplay(true,globalDispatch);
-        actions.setSelectedDevice(globalState.devices[i],globalDispatch);
-        history.push('/edit');
+       
+        history.push('/devices/'+i+'/edit');
     }  
   return (
     <div>

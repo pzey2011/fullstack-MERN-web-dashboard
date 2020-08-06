@@ -1,4 +1,4 @@
-import React , { useContext,useEffect} from 'react';
+import React , { useContext,useEffect,useState} from 'react';
 import {Button,
 TextField,
 Dialog,
@@ -9,19 +9,31 @@ Grid} from '@material-ui/core';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import GlobalContext from './store/GlobalContext';
 import * as actions from './store/GlobalActions';
-import { useHistory } from "react-router-dom";
+import { useHistory,useParams,useRouteMatch,useLocation } from "react-router-dom";
+import axios from 'axios';
 
-export default function EditForm() {
+export default function EditForm(props) {
   const history = useHistory();
+  const params = useParams();
   const {globalState,globalDispatch} = useContext(GlobalContext);
+  const [device,setDevice] = useState({});
   const handleClose = () => {
     actions.setEditDisplay(false,globalDispatch);
     history.push('/devices');
   };
+  useEffect((props)=>{
+    const fetchDeviceById = async (i)=>{
+        const responseData =  await axios.get(globalState.link+'api/devices/'+parseInt(i));
+        const device = {name:responseData.data.name,model:responseData.data.deviceModel,serial:responseData.data.serial,note:responseData.data.note};
+        setDevice(device);
+        actions.setEditDisplay(true,globalDispatch);
+    }
+    fetchDeviceById(params.id);
+  },[params.id])
   return (
         <Formik
             enableReinitialize
-            initialValues={{ name: globalState.selectedDevice.name , note: globalState.selectedDevice.note }}
+            initialValues={{ name: device.name , note: device.note }}
             validate={values => {
                 const errors = {};
                 if (!values.name) {
@@ -52,9 +64,9 @@ export default function EditForm() {
          isSubmitting,
          /* and other goodies */
        }) => ( 
-           
+
                     <Dialog open={globalState.editDisplay} onClose={handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Device {globalState.selectedDevice.name} :</DialogTitle>
+                        <DialogTitle id="form-dialog-title">Device {device.name} :</DialogTitle>
                         <Form>
                             <DialogContent>
                                 <Grid container spacing={2}>
@@ -63,7 +75,7 @@ export default function EditForm() {
                                             disabled 
                                             label='Serial' 
                                             name="serial" 
-                                            defaultValue={globalState.selectedDevice.serial} 
+                                            value={device.serial} 
                                         />
                                     </Grid>
                                     <Grid item xs={12}>

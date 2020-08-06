@@ -42,6 +42,6 @@ router.get('/:id', (req,res,next)=>{
     const device = DEVICES.member.find(d=>{
         return d['@id'].split('/')[2]==='id'+( parseInt(deviceId)+1);
     });
-    res.json({device});
+    res.json(device);
 });
 module.exports = router;

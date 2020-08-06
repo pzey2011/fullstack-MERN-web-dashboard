@@ -6,6 +6,7 @@ const initialState = {
     selectedDevice:{},
     selectedDeviceIndex:-1,
     editDisplay:false, 
+    link:'http://localhost:5000/'
 }
 
 const reducer  = (state = initialState, { type, payload }) => {
