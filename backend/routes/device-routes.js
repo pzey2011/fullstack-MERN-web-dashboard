@@ -35,9 +35,7 @@ const DEVICES = {
     }
 };
 router.get('/', (req,res,next)=>{
-    const deviceId = req.params.id;
-    
-    res.json({DEVICES});
+    res.json(DEVICES);
 });
 router.get('/:id', (req,res,next)=>{
     const deviceId = req.params.id;

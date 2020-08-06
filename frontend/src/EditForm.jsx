@@ -14,9 +14,9 @@ import { useHistory } from "react-router-dom";
 export default function EditForm() {
   const history = useHistory();
   const {globalState,globalDispatch} = useContext(GlobalContext);
-
   const handleClose = () => {
     actions.setEditDisplay(false,globalDispatch);
+    history.push('/devices');
   };
   return (
         <Formik

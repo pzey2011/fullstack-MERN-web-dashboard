@@ -2,8 +2,6 @@ import React, { useReducer } from 'react'
 
 const initialState = {
     devices: [
-        { name:'Wifi Level Sensor', serial:'70B3D5CD00100000', model:'PLD2-W', note:'Testing level sensor.'},
-        { name:'Wifi Level Sensor', serial:'FFFFFFFFFFFFFFFF', model:'PLD2-W', note:'Testing level sensor.'}
     ] ,
     selectedDevice:{},
     selectedDeviceIndex:-1,
