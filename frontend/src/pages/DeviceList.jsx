@@ -1,15 +1,22 @@
-import React, { useEffect , useContext } from 'react';
+import React, {  useContext , useEffect } from 'react';
 import { Table , TableBody , TableCell , TableContainer , TableHead ,TableRow , Paper , Grid, Button } from '@material-ui/core';
 import {createUseStyles} from 'react-jss';
 import EditIcon from '@material-ui/icons/Edit';
 import { useHistory } from "react-router-dom";
-import GlobalContext from './store/GlobalContext'
-import * as actions from './store/GlobalActions';
+import GlobalContext from '../store/GlobalContext'
+import * as actions from '../store/GlobalActions';
+import useApiRequest from '../custom_hooks/useApiRequest';
 import axios from 'axios';
 
 export default function DeviceList(props) {
     const {globalState,globalDispatch} = useContext(GlobalContext);
     const history = useHistory();
+    const [{ status, response }, makeRequest] = useApiRequest(
+        `${globalState.link}api/devices/`,
+        {
+            method: 'get',
+        }
+    );
 
     const useStyles = createUseStyles((theme) => ({
         myTable: {
@@ -24,16 +31,37 @@ export default function DeviceList(props) {
     }));
     const classes = useStyles();
 
-    function handleEdit(i){
+    const editDevice =(i,deviceIndex)=>{
         
-        actions.setEditDisplay(true,globalDispatch);
-       
+        actions.setEditFormDisplay(true,globalDispatch);
+        actions.setEditDeviceIndex(deviceIndex,globalDispatch);
         history.push('/devices/'+i+'/edit');
-    }  
+    }
+    const addDevice = ()=>{
+        actions.setCreateFormDisplay(true,globalDispatch);
+        history.push('/devices/create');
+    }
+    useEffect( () => {
+        axios.get(globalState.link+'api/devices/').then(response=>{
+            const devices = response.data.map(item=>{
+                return { 
+                    id:item._id,
+                    name:item.name,
+                    serial:item.serial,
+                    model:item.deviceModel,
+                    note:item.note,
+                }
+            })
+            actions.setDevices(devices,globalDispatch)
+          });
+    }, [])
   return (
     <div>
         <Grid container spacing={2} justify="center" className={classes.tableContainer} >
             <Grid item xs={12}>
+                <Button variant="contained" color="primary" onClick={() => addDevice()}>
+                    Add Device
+                </Button>
                 <TableContainer component={Paper}>
                     <Table className={classes.myTable}>
                         <TableHead>
@@ -55,7 +83,7 @@ export default function DeviceList(props) {
                                     </TableCell>
                                     <TableCell align="center">{row.model}</TableCell>
                                     <TableCell align="center">{row.note}</TableCell>
-                                    <TableCell align="center"><Button onClick={()=>handleEdit(i)}><EditIcon color="primary"/>EDIT</Button></TableCell>
+                                    <TableCell align="center"><Button onClick={()=>editDevice(i,row.id)}><EditIcon color="primary"/>EDIT</Button></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

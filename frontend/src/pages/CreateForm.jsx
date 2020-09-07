@@ -6,34 +6,23 @@ DialogActions,
 DialogContent,
 DialogTitle,
 Grid} from '@material-ui/core';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import GlobalContext from './store/GlobalContext';
-import * as actions from './store/GlobalActions';
-import { useHistory,useParams,useRouteMatch,useLocation } from "react-router-dom";
+import { useHistory} from "react-router-dom";
+import { Formik, Form } from 'formik';
+import GlobalContext from '../store/GlobalContext';
+import * as actions from '../store/GlobalActions';
 import axios from 'axios';
 
-export default function EditForm(props) {
-  const history = useHistory();
-  const params = useParams();
+export default function CreateForm(props) {
+const history = useHistory();
   const {globalState,globalDispatch} = useContext(GlobalContext);
-  const [device,setDevice] = useState({});
   const handleClose = () => {
-    actions.setEditDisplay(false,globalDispatch);
+    actions.setCreateFormDisplay(false,globalDispatch);
     history.push('/devices');
   };
-  useEffect((props)=>{
-    const fetchDeviceById = async (i)=>{
-        const responseData =  await axios.get(globalState.link+'api/devices/'+parseInt(i));
-        const device = {name:responseData.data.name,model:responseData.data.deviceModel,serial:responseData.data.serial,note:responseData.data.note};
-        setDevice(device);
-        actions.setEditDisplay(true,globalDispatch);
-    }
-    fetchDeviceById(params.id);
-  },[params.id])
   return (
         <Formik
             enableReinitialize
-            initialValues={{ name: device.name , note: device.note }}
+            initialValues={{ name: "" , note: "",deviceModel:"",serial:"" }}
             validate={values => {
                 const errors = {};
                 if (!values.name) {
@@ -49,8 +38,13 @@ export default function EditForm(props) {
               }}
             onSubmit={(values) => {
                 
-                actions.updateDevice(values,globalDispatch);
-                actions.setEditDisplay(false,globalDispatch);
+                fetch(`${globalState.link}api/devices/create`, {
+                    method: 'post',
+                    body: JSON.stringify(values)
+                  }).then(function(response) {
+                    console.log(response.json());
+                  })
+                actions.setCreateFormDisplay(false,globalDispatch);
                 history.push('/devices');
             }}
         >
@@ -65,17 +59,17 @@ export default function EditForm(props) {
          /* and other goodies */
        }) => ( 
 
-                    <Dialog open={globalState.editDisplay} onClose={handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Device {device.name} :</DialogTitle>
+                    <Dialog open={globalState.createFormDisplay} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Create Device :</DialogTitle>
                         <Form>
                             <DialogContent>
                                 <Grid container spacing={2}>
                                     <Grid item xs={12}>
                                         <TextField 
-                                            disabled 
                                             label='Serial' 
                                             name="serial" 
-                                            value={device.serial} 
+                                            value={values.serial}
+                                            onChange={handleChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -90,6 +84,14 @@ export default function EditForm(props) {
                                             onChange={handleChange}
                                             value = {values.name}
                                             helperText= {errors.name}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField 
+                                            label='Model' 
+                                            name="deviceModel" 
+                                            value={values.deviceModel}
+                                            onChange={handleChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>

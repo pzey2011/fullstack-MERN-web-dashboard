@@ -1,7 +1,8 @@
 import React, { useEffect,useContext,useState } from 'react';
 import axios from 'axios';
-import DeviceList from './DeviceList';
-import EditForm from './EditForm';
+import DeviceList from './pages/DeviceList';
+import EditForm from './pages/EditForm';
+import CreateForm from './pages/CreateForm';
 import * as actions from './store/GlobalActions';
 import {BrowserRouter, Route, Switch,Redirect } from 'react-router-dom';
 import GlobalContext from './store/GlobalContext';
@@ -29,6 +30,7 @@ function App() {
         <Switch>
           <Route exact path="/devices" component = {DeviceList} />
           <Route exact path="/devices/:id/edit" component = {EditForm} />
+          <Route exact path="/devices/create" component = {CreateForm} />
           <Redirect from='/' to='/devices' />
         </Switch>
       </BrowserRouter>

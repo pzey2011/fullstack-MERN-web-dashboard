@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const devicesControllers = require('../controllers/devices_controllers');
 const DEVICES = {
     "@id": "/devices",
     "@type": "Collection",
@@ -34,14 +35,9 @@ const DEVICES = {
     "last": "/devices?page=1"
     }
 };
-router.get('/', (req,res,next)=>{
-    res.json(DEVICES);
-});
-router.get('/:id', (req,res,next)=>{
-    const deviceId = req.params.id;
-    const device = DEVICES.member.find(d=>{
-        return d['@id'].split('/')[2]==='id'+( parseInt(deviceId)+1);
-    });
-    res.json(device);
-});
+router.get('/',devicesControllers.getAllDevices);
+router.post('/create',devicesControllers.createDevice);
+router.get('/:id', devicesControllers.getDeviceById);
+router.patch('/:id', devicesControllers.updateDevice);
+router.delete('/:id', devicesControllers.deleteDevice);
 module.exports = router;
