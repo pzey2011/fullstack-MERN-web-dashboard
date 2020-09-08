@@ -16,7 +16,14 @@ export default function EditForm(props) {
   const history = useHistory();
   const params = useParams();
   const {globalState,globalDispatch} = useContext(GlobalContext);
-  const [device,setDevice] = useState({});
+  const [device,setDevice] = useState(
+    {
+      name:'',
+      model:'',
+      serial:'',
+      note:''
+    }
+    );
   const handleClose = () => {
     actions.setEditFormDisplay(false,globalDispatch);
     history.push('/devices');
@@ -48,9 +55,7 @@ export default function EditForm(props) {
                 return errors;
               }}
             onSubmit={(values) => {
-                
               axios.patch(`${globalState.link}api/devices/${globalState.editDeviceIndex}`,values).then(response=>{
-               console.log(response)
               });
                 actions.setEditFormDisplay(false,globalDispatch);
                 history.push('/devices');
@@ -77,7 +82,7 @@ export default function EditForm(props) {
                                             disabled 
                                             label='Serial' 
                                             name="serial" 
-                                            value={device.serial} 
+                                            defaultValue={device.serial} 
                                         />
                                     </Grid>
                                     <Grid item xs={12}>

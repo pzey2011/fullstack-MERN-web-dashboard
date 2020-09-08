@@ -20,10 +20,10 @@ export const updateDevice=(values,dispatch)=>{
 export const createDevice=(values,dispatch)=>{
     dispatch({type:'CREATE_DEVICE', payload:values}) 
 }
-export const setEditDeviceIndex = (payload) => ({
+export const setEditDeviceIndex = (payload,dispatch) => {dispatch({
     type: 'SET_EDIT_DEVICE_INDEX',
     payload
-})
+})}
 
 
 export const fetching = () => ({ type: 'API_FETCHING' });

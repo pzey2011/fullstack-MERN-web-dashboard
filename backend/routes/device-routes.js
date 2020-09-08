@@ -36,7 +36,7 @@ const DEVICES = {
     }
 };
 router.get('/',devicesControllers.getAllDevices);
-router.post('/create',devicesControllers.createDevice);
+router.post('/',devicesControllers.createDevice);
 router.get('/:id', devicesControllers.getDeviceById);
 router.patch('/:id', devicesControllers.updateDevice);
 router.delete('/:id', devicesControllers.deleteDevice);

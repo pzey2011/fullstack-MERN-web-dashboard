@@ -37,13 +37,7 @@ const history = useHistory();
                 return errors;
               }}
             onSubmit={(values) => {
-                
-                fetch(`${globalState.link}api/devices/create`, {
-                    method: 'post',
-                    body: JSON.stringify(values)
-                  }).then(function(response) {
-                    console.log(response.json());
-                  })
+                axios.post(`${globalState.link}api/devices/`,values);
                 actions.setCreateFormDisplay(false,globalDispatch);
                 history.push('/devices');
             }}

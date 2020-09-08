@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 const Device = require('../models/device');
 const getDeviceById = async (req, res, next) => {
   const deviceId = req.params.id;
-  console.log(req.params);
   let devices;
   devices = await Device.find().exec();
-  console.log(devices[deviceId]);
   res.json(devices[deviceId]);
 };
 const getAllDevices = async (req, res, next) => {
@@ -16,16 +14,13 @@ const getAllDevices = async (req, res, next) => {
   };
 
 const createDevice = async (req, res, next) => {
-
   const { name, serial, deviceModel, note } = req.body;
-
   const createdDevice = new Device({
     name,
     serial,
     deviceModel,
     note
   });
-
   
   try {
     await createdDevice.save(); 
@@ -33,22 +28,23 @@ const createDevice = async (req, res, next) => {
     return next('Creating place failed, please try again.');
   }
 
-  res.json({ place: createdPlace });
+  res.json({ device: createdDevice });
 };
 
 const updateDevice = async (req, res, next) => {
 
-  const { deviceModel, note } = req.body;
+  const { name, note } = req.body;
   const deviceId = req.params.id;
-
+  let devices = [];
   let device;
   try {
-    device = await Device.findById(deviceId);
+    devices = await Device.find().exec();
+    device = devices[deviceId];
   } catch (err) {
     return next('Something went wrong, could not update place.');
   }
 
-  device.deviceModel = deviceModel;
+  device.name = name;
   device.note = note;
 
   try {
@@ -58,17 +54,19 @@ const updateDevice = async (req, res, next) => {
     return next('Something went wrong, could not update place.');
   }
 
-  res.status(200).json({ place });
+  res.status(200).json({ device });
 };
 
 const deleteDevice = async (req, res, next) => {
   const deviceId = req.params.id;
-
+  
+  let devices = [];
   let device;
   try {
-    device = await Device.findById(deviceId);
-  } catch (err) {
+    devices = await Device.find().exec();
+    device = devices[deviceId];
     
+  } catch (err) {
     return next('Something went wrong, could not delete place.');
   }
 
@@ -76,14 +74,12 @@ const deleteDevice = async (req, res, next) => {
     
     return next('Could not find place for this id.');
   }
-
   try {
     await device.remove();
-    place.creator.places.pull(place);
-    await device.save();
   } catch (err) {
     return next('Something went wrong, could not delete place.');
   }
+
   
   res.status(200).json({ message: 'Deleted place.' });
 };
